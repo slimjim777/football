@@ -17,7 +17,7 @@
         </header>
 
         <div class="row">
-            <form action="/vintageform" method="post">
+            <form action="/form" method="post">
                 <fieldset>
                     <label for="monday">Kick-off Date:
                         <b>
@@ -26,7 +26,7 @@
                         </b>
                     </label>
                     <label for="name">Name:
-                        <input name="name" type="text" placeholder="name of player" />
+                        <input id="name" name="name" type="text" placeholder="name of player" onchange="handleName()" />
                     </label>
 
                     <div class="clear">
@@ -53,5 +53,15 @@
             </div>
         </div>
     </div>
+
+    <script>
+        var name = localStorage.getItem('name') || '';
+        document.getElementById("name").value = name;
+
+        function handleName() {
+            localStorage.setItem("name", document.getElementById("name").value);
+        }
+    </script>
+
   </body>
 </html>

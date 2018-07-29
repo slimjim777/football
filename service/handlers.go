@@ -126,7 +126,7 @@ func StaticFormHandler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Error with booking: %v\n", err)
 	}
 
-	http.Redirect(w, r, "/vintage", http.StatusFound)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 // BookingHandler creates or updates a booking for an individual
