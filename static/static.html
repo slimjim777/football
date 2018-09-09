@@ -40,16 +40,29 @@
     
 
             <div class="box clear">
-                <h3>Playing: {{len .Bookings}}</h3>
+                <h3>Total: {{len .Bookings}}</h3>
                 <div class="row">
                     <table>
-                        {{range .Bookings}}
+                        {{range $i, $e := .Bookings}}
+                            {{if lt $i 16}}
                             <tr>
-                                <td>{{println .Name}}</td>
+                                <td>{{println $e.Name}}</td>
                             </tr>
+                            {{end}}
                         {{end}}
                     </table>
                 </div>
+                <div class="row">
+                        <table>
+                            {{range $i, $e := .Bookings}}
+                                {{if gt $i 15}}
+                                <tr>
+                                    <td class="reserve">{{println $e.Name}}</td>
+                                </tr>
+                                {{end}}
+                            {{end}}
+                        </table>
+                    </div>                
             </div>
         </div>
     </div>

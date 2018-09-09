@@ -40,7 +40,7 @@ const (
 			DO UPDATE SET playing = $3 WHERE booking.book_date=$1 AND booking.name=$2
 	`
 
-	listBookingsForDate = `SELECT id, created, book_date, name, playing from booking where book_date=$1`
+	listBookingsForDate = `SELECT id, created, book_date, name, playing from booking where book_date=$1 ORDER BY created`
 )
 
 // Booking holds a booking
