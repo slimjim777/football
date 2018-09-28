@@ -14,10 +14,13 @@ import (
 	"github.com/slimjim777/football/datastore"
 )
 
+const limit = 20
+
 // Page is the page details for the web application
 type Page struct {
 	Date     string
 	Bookings []datastore.Booking
+	Limit    int
 }
 
 // VersionResponse is the JSON response from the API Version method
@@ -79,7 +82,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 // StaticHandler is the front page of the static web page
 func StaticHandler(w http.ResponseWriter, r *http.Request) {
-	page := Page{}
+	page := Page{Limit: limit}
 
 	path := []string{".", staticTemplate}
 	t, err := template.ParseFiles(strings.Join(path, ""))

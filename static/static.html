@@ -44,7 +44,7 @@
                 <div class="row">
                     <table>
                         {{range $i, $e := .Bookings}}
-                            {{if lt $i 16}}
+                            {{if lt $i $.Limit}}
                             <tr>
                                 <td>{{println $e.Name}}</td>
                             </tr>
@@ -55,7 +55,7 @@
                 <div class="row">
                         <table>
                             {{range $i, $e := .Bookings}}
-                                {{if gt $i 15}}
+                                {{if ge $i $.Limit}}
                                 <tr>
                                     <td class="reserve">{{println $e.Name}}</td>
                                 </tr>
