@@ -38,7 +38,7 @@ const (
 		INSERT INTO booking (book_date, name, playing, modified)
 		VALUES ($1, $2, $3, $4)
 		ON CONFLICT (book_date, name)
-			DO UPDATE SET playing = $3 WHERE booking.book_date=$1 AND booking.name=$2 AND modified=NOW()
+			DO UPDATE SET playing = $3 WHERE booking.book_date=$1 AND booking.name=$2 AND booking.modified=NOW()
 	`
 
 	listBookingsForDate = `SELECT id, created, book_date, name, playing, modified from booking where book_date=$1 ORDER BY modified`
@@ -46,11 +46,11 @@ const (
 
 // Booking holds a booking
 type Booking struct {
-	ID      int       `json:"id"`
-	Created time.Time `json:"created"`
-	Date    string    `json:"date"`
-	Name    string    `json:"name"`
-	Playing bool      `json:"playing"`
+	ID       int       `json:"id"`
+	Created  time.Time `json:"created"`
+	Date     string    `json:"date"`
+	Name     string    `json:"name"`
+	Playing  bool      `json:"playing"`
 	Modified time.Time `json:"modified"`
 }
 
