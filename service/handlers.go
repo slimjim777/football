@@ -123,8 +123,9 @@ func StaticFormHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	d := getDate()
+	name := strings.TrimSpace(r.FormValue("name"))
 
-	err := datastore.BookingUpsert(r.FormValue("name"), d.Format(time.RFC3339)[:10], r.FormValue("playing") == "playing")
+	err := datastore.BookingUpsert(name, d.Format(time.RFC3339)[:10], r.FormValue("playing") == "playing")
 	if err != nil {
 		log.Printf("Error with booking: %v\n", err)
 	}
