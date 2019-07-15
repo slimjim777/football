@@ -147,7 +147,7 @@ func BookingHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = datastore.BookingUpsert(booking.Name, booking.Date, booking.Playing)
+	err = datastore.BookingUpsert(strings.TrimSpace(booking.Name), booking.Date, booking.Playing)
 	if err != nil {
 		log.Printf("Error in decoding JSON booking: %v\n", err)
 		standardResponse(false, "Error in saving the response", w)
