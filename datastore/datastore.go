@@ -29,18 +29,19 @@ const (
 		book_date date not null,
 		name varchar(200) not null,
 		playing boolean
+		modified timestamp DEFAULT NOW(),
 	)`
 
 	createBookingIndex = `CREATE UNIQUE INDEX IF NOT EXISTS booking_idx ON booking (book_date DESC, name)`
 
 	upsertBooking = `
-		INSERT INTO booking (book_date, name, playing)
-		VALUES ($1, $2, $3)
+		INSERT INTO booking (book_date, name, playing, modified)
+		VALUES ($1, $2, $3, $4)
 		ON CONFLICT (book_date, name)
-			DO UPDATE SET playing = $3 WHERE booking.book_date=$1 AND booking.name=$2
+			DO UPDATE SET playing = $3 WHERE booking.book_date=$1 AND booking.name=$2 AND modified=NOW()
 	`
 
-	listBookingsForDate = `SELECT id, created, book_date, name, playing from booking where book_date=$1 ORDER BY created`
+	listBookingsForDate = `SELECT id, created, book_date, name, playing, modified from booking where book_date=$1 ORDER BY modified`
 )
 
 // Booking holds a booking
@@ -50,6 +51,7 @@ type Booking struct {
 	Date    string    `json:"date"`
 	Name    string    `json:"name"`
 	Playing bool      `json:"playing"`
+	Modified time.Time `json:"modified"`
 }
 
 // CreateDatabase creates the database tables
@@ -98,7 +100,7 @@ func BookingList(date string) ([]Booking, error) {
 	defer rows.Close()
 	for rows.Next() {
 		b := Booking{}
-		err = rows.Scan(&b.ID, &b.Created, &b.Date, &b.Name, &b.Playing)
+		err = rows.Scan(&b.ID, &b.Created, &b.Date, &b.Name, &b.Playing, &b.Modified)
 		if err != nil {
 			return bookings, err
 		}
