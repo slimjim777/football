@@ -38,7 +38,7 @@ const (
 		INSERT INTO booking (book_date, name, playing, modified)
 		VALUES ($1, $2, $3, NOW())
 		ON CONFLICT (book_date, name)
-			DO UPDATE SET playing = $3 WHERE booking.book_date=$1 AND booking.name=$2 AND booking.modified=NOW()
+			DO UPDATE SET playing = $3, modified=NOW() WHERE booking.book_date=$1 AND booking.name=$2
 	`
 
 	listBookingsForDate = `SELECT id, created, book_date, name, playing, modified from booking where book_date=$1 ORDER BY modified`
@@ -79,6 +79,7 @@ func CreateDatabase() error {
 func BookingUpsert(name, date string, playing bool) error {
 
 	if _, err := dbConnection.Exec(upsertBooking, date, name, playing); err != nil {
+		log.Println("Upsert error:", err)
 		return err
 	}
 
