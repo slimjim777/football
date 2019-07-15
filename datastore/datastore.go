@@ -36,7 +36,7 @@ const (
 
 	upsertBooking = `
 		INSERT INTO booking (book_date, name, playing, modified)
-		VALUES ($1, $2, $3, $4)
+		VALUES ($1, $2, $3, NOW())
 		ON CONFLICT (book_date, name)
 			DO UPDATE SET playing = $3 WHERE booking.book_date=$1 AND booking.name=$2 AND booking.modified=NOW()
 	`
