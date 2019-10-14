@@ -12,7 +12,7 @@ import (
 	"github.com/slimjim777/football/datastore"
 )
 
-const limit = 20
+const limit = 40
 
 // Page is the page details for the web application
 type Page struct {
