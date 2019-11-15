@@ -83,7 +83,8 @@ func StaticHandler(w http.ResponseWriter, r *http.Request) {
 
 // StaticFormHandler is the POST-ed form
 func StaticFormHandler(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm()
+	log.Println("---", r.Header)
+	log.Println("---", r.RemoteAddr)
 
 	if len(r.FormValue("name")) == 0 {
 		http.Redirect(w, r, "/vintage", http.StatusFound)
