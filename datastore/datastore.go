@@ -28,30 +28,32 @@ const (
 		created timestamp DEFAULT NOW(),
 		book_date date not null,
 		name varchar(200) not null,
-		playing boolean
+		playing boolean,
 		modified timestamp DEFAULT NOW(),
+		ip_address varchar(200) DEFAULT ''
 	)`
 
 	createBookingIndex = `CREATE UNIQUE INDEX IF NOT EXISTS booking_idx ON booking (book_date DESC, name)`
 
 	upsertBooking = `
-		INSERT INTO booking (book_date, name, playing, modified)
-		VALUES ($1, $2, $3, NOW())
+		INSERT INTO booking (book_date, name, playing, modified, ip_address)
+		VALUES ($1, $2, $3, NOW(), $4)
 		ON CONFLICT (book_date, name)
 			DO UPDATE SET playing = $3, modified=NOW() WHERE booking.book_date=$1 AND booking.name=$2
 	`
 
-	listBookingsForDate = `SELECT id, created, book_date, name, playing, modified from booking where book_date=$1 ORDER BY modified`
+	listBookingsForDate = `SELECT id, created, book_date, name, playing, modified, ip_address from booking where book_date=$1 ORDER BY modified`
 )
 
 // Booking holds a booking
 type Booking struct {
-	ID       int       `json:"id"`
-	Created  time.Time `json:"created"`
-	Date     string    `json:"date"`
-	Name     string    `json:"name"`
-	Playing  bool      `json:"playing"`
-	Modified time.Time `json:"modified"`
+	ID        int       `json:"id"`
+	Created   time.Time `json:"created"`
+	Date      string    `json:"date"`
+	Name      string    `json:"name"`
+	Playing   bool      `json:"playing"`
+	Modified  time.Time `json:"modified"`
+	IPAddress string    `json:"ip_address"`
 }
 
 // CreateDatabase creates the database tables
@@ -76,9 +78,9 @@ func CreateDatabase() error {
 }
 
 // BookingUpsert upserts a booking for a date
-func BookingUpsert(name, date string, playing bool) error {
+func BookingUpsert(name, date string, playing bool, ipAddress string) error {
 
-	if _, err := dbConnection.Exec(upsertBooking, date, name, playing); err != nil {
+	if _, err := dbConnection.Exec(upsertBooking, date, name, playing, ipAddress); err != nil {
 		log.Println("Upsert error:", err)
 		return err
 	}
@@ -101,7 +103,7 @@ func BookingList(date string) ([]Booking, error) {
 	defer rows.Close()
 	for rows.Next() {
 		b := Booking{}
-		err = rows.Scan(&b.ID, &b.Created, &b.Date, &b.Name, &b.Playing, &b.Modified)
+		err = rows.Scan(&b.ID, &b.Created, &b.Date, &b.Name, &b.Playing, &b.Modified, &b.IPAddress)
 		if err != nil {
 			return bookings, err
 		}

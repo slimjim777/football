@@ -84,7 +84,6 @@ func StaticHandler(w http.ResponseWriter, r *http.Request) {
 // StaticFormHandler is the POST-ed form
 func StaticFormHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("---", r.Header)
-	log.Println("---", r.RemoteAddr)
 
 	if len(r.FormValue("name")) == 0 {
 		http.Redirect(w, r, "/vintage", http.StatusFound)
@@ -94,7 +93,7 @@ func StaticFormHandler(w http.ResponseWriter, r *http.Request) {
 	d := getDate()
 	name := strings.TrimSpace(r.FormValue("name"))
 
-	err := datastore.BookingUpsert(name, d.Format(time.RFC3339)[:10], r.FormValue("playing") == "playing")
+	err := datastore.BookingUpsert(name, d.Format(time.RFC3339)[:10], r.FormValue("playing") == "playing", r.Header.Get("X-Forwarded-For"))
 	if err != nil {
 		log.Printf("Error with booking: %v\n", err)
 	}
